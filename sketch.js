@@ -19,6 +19,8 @@ function setup() {
   balloon.addAnimation("hotAirBalloon",balloonImage1);
   balloon.scale=0.5;
  textSize(20); 
+ var balloonHeight = database.ref("balloon/height")
+ balloonHeight.on("value",readHeight,showError)
 
 }
 
@@ -29,22 +31,27 @@ function draw() {
   if(keyDown(LEFT_ARROW)){
     balloon.addAnimation("hotAirBalloon",balloonImage2);
     //write code to move air balloon in left direction
-    writePosition(-1,0);
+    updateHeight(-1,0);
   }
   else if(keyDown(RIGHT_ARROW)){
     balloon.addAnimation("hotAirBalloon",balloonImage2);
     //write code to move air balloon in right direction
-    writePosition(1,0);
+    updateHeight(1,0);
   }
   else if(keyDown(UP_ARROW)){
     balloon.addAnimation("hotAirBalloon",balloonImage2);
     //write code to move air balloon in up direction
-    writePosition(0,-1);
+    updateHeight(0,-1);
   }
   else if(keyDown(DOWN_ARROW)){
     balloon.addAnimation("hotAirBalloon",balloonImage2);
     //write code to move air balloon in down direction
-    writePosition(0,+1);
+    updateHeight(0,+1);
+  }
+  if(keyDown("UP_ARROW")){
+    updateHeight(0,-10);
+    balloon.addAnimation("hotAirBalloon",balloonImage2);
+    balloon.scale = balloon.scale -0.01;
   }
 
   drawSprites();
@@ -61,21 +68,12 @@ function updateHeight(x,y){
   })
 }
 
-function readposition(data){
+function readHeight(data){
   height = data.val()
   balloon.x = height.x
   balloon.y = height.y
 }
 
-function writeheight(x,y){
-  database.ref("balloon/height").set({
-      x:height.x + x,
-      y:height.y + y
-  })
-}
-
-if(keyDown(UP_ARROW)){
-  updateHeight(0,-10);
-  balloon.addAnimation("hotAirBalloon",balloonImage2);
-  balloon.scale = balloon.scale -0.01;
+function showError(){
+  console.log("Error")
 }
